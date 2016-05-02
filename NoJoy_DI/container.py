@@ -160,15 +160,25 @@ class Container(object):
 		else:
 			cls = svc_def._get_classification()
 
+		print("Types 1: ", svc_def._types)
+
 		types_kwargs = dict(svc_def._types)
+
+		print("Types 2: ", types_kwargs)
 		self._update_types_from_signature(cls.__init__, types_kwargs)
 
 		types_kwargs = transform_types((types_kwargs))
 
+		print("Types 3: ", types_kwargs)
+
 		for config in svc_def._arguments_injectors:
 			transformer(config)(types_kwargs)
 
+		#print("Types_kwargs: ",types_kwargs )
+
 		myinstance = cls(**types_kwargs)
+
+		#print("Myinstance: ", myinstance)
 
 		for config in svc_def._injectors:
 			transformer(config)(myinstance)
