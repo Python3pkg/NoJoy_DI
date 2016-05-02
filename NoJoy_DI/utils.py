@@ -1,10 +1,10 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
-# NoJoy-DI (c) 2016 by Andre Karlsson<andre.karlsson@protractus.se>
+# NoJoy_DI (c) 2016 by Andre Karlsson<andre.karlsson@protractus.se>
 #
-# This file is part of NoJoy-DI.
+# This file is part of NoJoy_DI.
 #
-#    NoJoy-DI is free software: you can redistribute it and/or modify
+#    NoJoy_DI is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
@@ -21,7 +21,8 @@
 # Timesamp: 5/1/16 :: 10:23 PM
 
 import functools
-from inspect import isclass, isfunction
+from inspect import isclass, isfunction, stack
+from functools import wraps
 
 def object_name_standard(myobject):
     if isclass(myobject) or isfunction(myobject):
@@ -30,6 +31,18 @@ def object_name_standard(myobject):
         return myobject
 
     print ("Error")
+
+
+def lock_wrapper(myfunc):
+	@wraps(myfunc)
+	def wrapper(self, *args, **kwargs):
+		if self._locked:
+			print("Raise Service is already created")
+		else:
+			myfunc(self, *args, **kwargs)
+		return self
+	return wrapper
+
 
 class LazyMarker(object):
     def __init__(self, service=None, function=None, variable=None):
