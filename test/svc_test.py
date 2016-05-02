@@ -13,7 +13,7 @@
 # Timesamp: 2016-05-02 :: 14:19
 
 import unittest
-from NoJoy_DI.NoJoy_DI.container import Container
+from NoJoy_DI.container import Container
 
 class Test(unittest.TestCase):
 	def testSignature(self):

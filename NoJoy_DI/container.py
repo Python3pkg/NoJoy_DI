@@ -56,6 +56,7 @@ class Container(object):
 		my_trees_cls = []
 
 		for tree in trees:
+			print(tree, tree)
 			if isinstance(tree, BaseTree):
 				my_trees.append(tree)
 				my_trees_cls.append(tree.__class__)
@@ -64,16 +65,23 @@ class Container(object):
 				my_trees_cls.append(tree)
 		self.my_trees = tuple(my_trees)
 		self.my_trees_cls = dict([(obj, inst) for inst, obj in enumerate(tuple(my_trees_cls))])
+		print(my_trees)
+		print(my_trees_cls)
 
 
 	def add_service(self, name):
 		s = Service(name)
 		self.services[s.name] = s
+		print(self.services)
 		return s
+
+	def get(self, service):
+		return self._get_data(service)
 
 
 	def add_variables(self, name, value):
 		self.variables[name] = value
+		print(self.variables)
 
 
 	def get_variable(self, name):
@@ -90,7 +98,7 @@ class Container(object):
 		return self.services[name]
 
 
-	def get_data(self, myservice, req_tokens):
+	def _get_data(self, myservice, req_tokens=None):
 		name = object_name_standard(myservice)
 
 		if name == self.my_service_name:
@@ -117,10 +125,13 @@ class Container(object):
 
 		def transformer(v):
 			if isinstance(v, LazyMarker):
-				return v.transformer(lambda name: self.get_data(name, req_tokens + [service_definition]), self.get_variable)
+				print(v)
+				return v.transformer(lambda name: self._get_data(name, req_tokens + [service_definition]), self.get_variable)
 
 		def service_maker():
-			return self._create(service_definition, transformer)
+			return self._make(service_definition, transformer)
+
+		return self.my_trees[tree_idx].get(service_maker, name)
 
 	def _update_types_from_signature(self, function, types_kwargs):
 		try:

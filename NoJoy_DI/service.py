@@ -89,9 +89,9 @@ class Service(object):
 	def _type_maker(self, kwargs):
 		types = {}
 		for key, value in kwargs.items():
-			if key.endswitch("__svc"):
+			if key.endswith("__svc"):
 				types[key[:-5]] = self._lazymarker(myservice=value)
-			elif key.endswitch("__param"):
+			elif key.endswith("__param"):
 				types[key[-7]] = self._lazymarker(myvariable=value)
 			else:
 				types[key] = value
@@ -108,6 +108,7 @@ class Service(object):
 	@lock_wrapper
 	def types(self, **kwargs):
 		self._types.update(self._type_maker(kwargs))
+		print(self._types)
 
 	@lock_wrapper
 	def call(self, function, **kwargs):

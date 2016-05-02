@@ -46,7 +46,7 @@ def lock_wrapper(myfunc):
 
 class LazyMarker(object):
     def __init__(self, service=None, function=None, variable=None):
-        super(LazyMarker, self).init()
+        super(LazyMarker, self).__init__()
         self.service = service
         self.function = function
         self.variable = variable
