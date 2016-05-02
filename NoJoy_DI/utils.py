@@ -9,7 +9,7 @@
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    Foobar is distributed in the hope that it will be useful,
+#    NoJoy_DI is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
@@ -26,8 +26,8 @@ from functools import wraps
 
 def object_name_standard(myobject):
     if isclass(myobject) or isfunction(myobject):
-        return "{0}.{1}".format(myobject.__module__,myobject.__name__)
-    if isinstance(myobject):
+        return "{0}.{1}".format(myobject.__module__, myobject.__name__)
+    if isinstance(myobject, str):
         return myobject
 
     print ("Error")
