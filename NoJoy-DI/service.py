@@ -24,3 +24,18 @@ class Service(object):
 
     _mytree = "one of my trees"
     _factory = None
+
+    _classification = None
+    _classification_getter = None
+    _inject_arguments = False
+
+    _locked = False
+
+    def __init__(self, mycallable, classification):
+        super(Service, self).__init__()
+
+        self._kwargs = {}
+        self._sets = {}
+        self._calls = []
+        self._configs = []
+        self._arguments_configs = []

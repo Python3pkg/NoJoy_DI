@@ -26,7 +26,8 @@ import functools
 from service import Service
 from utils import *
 
-class Container(object):        
+
+class Container(object):
 	"""
 	Joyiders Norse Dependency Injection Classifcation container!
 	"""
@@ -39,80 +40,88 @@ class Container(object):
 		self.services = {}
 		self.variables = {}
 		self.my_service_name = object_name_standard(self.__class__)
-		print (object_name_standard(self.__class__))
+		print(object_name_standard(self.__class__))
 
-    def set_base_tree(self, *basetree):
-        my_trees= []
-        my_treeis_cls []
 
-        for tree in basetree :
-            if isinstance(tree, NoJoyBase):
-                my_trees.append(tree)
-                my_treeis_cls.append(tree.__class)
-            else:
-                my_trees.append(basetree())
-                my_treeis_cls.append(basetree)
-        self.my_trees = tuple(my_trees)
-        self.my_trees_cls = dict([(obj, inst) in enumerate(tuple(my_trees_cls))])
+	def set_base_tree(self, *basetree):
+		my_trees = []
+		my_trees_cls = []
 
-    def add_service(self, name):
-        s = Service(name)
-        self.services[s.name] = s
-        return s
+		for tree in basetree:
+			if isinstance(tree, NoJoyBase):
+				my_trees.append(tree)
+				my_trees_cls.append(tree.__class)
+			else:
+				my_trees.append(basetree())
+				my_trees_cls.append(basetree)
+		self.my_trees = tuple(my_trees)
+		self.my_trees_cls = dict([(obj, inst) in enumerate(tuple(my_trees_cls))])
 
-    def add_variables(self, name, value):
-        self.variables[name] = value
 
-    def get_variable(self, name):
-        if name in self.variables:
-            return self.variables[name]
-        else:
-            print("Unknown variable name")
+	def add_service(self, name):
+		s = Service(name)
+		self.services[s.name] = s
+		return s
 
-    def get_definition(self, myservice):
-        name = object_name_standard(myservice)
-        if not name in self.services:
-            print("Raise Error unknown service")
-        return self.services[name]
 
-    def get_data(self, myservice, req_tokens)
-        name = object_name_standard(myservice)
+	def add_variables(self, name, value):
+		self.variables[name] = value
 
-        if name == self.my_service_name:
-            return self
 
-        if name not in self.services:
-            print("Raise Error unknown servce")
+	def get_variable(self, name):
+		if name in self.variables:
+			return self.variables[name]
+		else:
+			print("Unknown variable name")
 
-        service_definition = self.services.get(name)
 
-        my_tree = service_definition._mytree
+	def get_definition(self, myservice):
+		name = object_name_standard(myservice)
+		if not name in self.services:
+			print("Raise Error unknown service")
+		return self.services[name]
 
-        if not my_tree in self.my_trees_cls:
-            print("Raise Error unknown servce")
 
-        tree_idx = self.my_trees_cls[my_tree]
+	def get_data(self, myservice, req_tokens)
+		name = object_name_standard(myservice)
 
-        if not req_tokens:
-            req_tokens = []
-        else:
-            req_tree = req_tokens[-1]._mytree
-            if req_tree and tree_idx > self.my_trees_cls[req_tree]:
-                print("Scope are too big")
+		if name == self.my_service_name:
+			return self
 
-        def transformer(v):
-            if isinstance(v, LazyMarker):
-                return v.transformer(lambda name:self.get_data(name,
-                                                               req_tokens + [service_definition]),
-                                     self.get_variable)
+		if name not in self.services:
+			print("Raise Error unknown servce")
 
-        #Return the Service here some how, need to create it first so i know whgat to return
+		service_definition = self.services.get(name)
 
-    def _make(self, svc_def, transformer):
-        if svc_def._factory:
-            cls = transformer(svc_def._factory)
-        else:
-            cls = svc_def.###get_service_settings###
+		my_tree = service_definition._mytree
 
-if __name__ == '__main__':
-	c=Container()
+		if not my_tree in self.my_trees_cls:
+			print("Raise Error unknown servce")
+
+		tree_idx = self.my_trees_cls[my_tree]
+
+		if not req_tokens:
+			req_tokens = []
+		else:
+			req_tree = req_tokens[-1]._mytree
+			if req_tree and tree_idx > self.my_trees_cls[req_tree]:
+				print("Scope are too big")
+
+		def transformer(v):
+			if isinstance(v, LazyMarker):
+				return v.transformer(lambda name: self.get_data(name,
+				                                                req_tokens + [service_definition]),
+				                     self.get_variable)
+
+				# Return the Service here some how, need to create it first so i know whgat to return
+
+
+	def _make(self, svc_def, transformer):
+		if svc_def._factory:
+			cls = transformer(svc_def._factory)
+		else:
+			cls = svc_def.  ###get_service_settings###
+
+
+	if __name__ == '__main__':
+		c = Container()
