@@ -32,6 +32,7 @@ except ImportError:
 	from funcsigs import signature
 	from funcsigs import _empty as signature_empty
 
+
 class Service(object):
 
 	_mytree = SingletonTree
