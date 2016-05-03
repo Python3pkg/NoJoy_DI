@@ -35,7 +35,7 @@ except ImportError:
     from funcsigs import _empty as signature_empty
 
 
-class Container(object):
+class DI(object):
 	"""
 	Joyiders Norse Dependency Injection Classifcation container!
 	"""
@@ -44,7 +44,7 @@ class Container(object):
 	my_trees_cls = []
 
 	def __init__(self):
-		super(Container, self).__init__()
+		super(DI, self).__init__()
 		self.services = {}
 		self.variables = {}
 		self.my_service_name = object_name_standard(self.__class__)
@@ -67,7 +67,8 @@ class Container(object):
 		self.my_trees_cls = dict([(obj, inst) for inst, obj in enumerate(tuple(these_trees_cls))])
 
 	def set(self, name):
-		svc = self.attempt(name)
+		svc = Service(name)
+		self.services[svc.name] = svc
 		return svc
 
 

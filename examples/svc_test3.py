@@ -20,7 +20,7 @@
 # Filename:  by: andrek
 # Timesamp: 5/2/16 :: 11:36 PM
 
-from NoJoy_DI.container import Container
+from NoJoy_DI.di import DI
 
 class MyVariableSvc(object):
     pass
@@ -34,7 +34,7 @@ class AService(object):
         print("MyService.some_method: %s" % param.__class__.__name__)
         print("kwargs from container: ", kwargs.items())
 
-c = Container()
+c = DI()
 
 c.attempt(MyVariableSvc)
 c.attempt(AService).call("some_method", param=MyVariableSvc, ham="hamdata", spam="spamdata")

@@ -20,7 +20,7 @@
 # Filename:  by: andrek
 # Timesamp: 5/2/16 :: 10:55 PM
 
-from NoJoy_DI.container import Container
+from NoJoy_DI.di import DI
 
 class MyVariableSvc(object):
     pass
@@ -33,7 +33,20 @@ class AService(object):
     def some_method(self, param:MyVariableSvc):
         print("MyService.some_method: %s" % param.__class__.__name__)
 
-c = Container()
+c = DI()
+mydict = {'className':'SomeClass',
+          'properties':[
+	          {'name':'response',
+                         'value':
+	                         {'type':'service','name':'response'}},
+                        {'name':'someFlag',
+                         'value':
+	                         {'type':'paramter','value':True}
+                         }
+                        ]
+          }
+pp = pprint.PrettyPrinter(indent=2)
+pp.pprint(mydict)
 
 c.set(MyVariableSvc)
 c.attempt(AService).set_signature().call("some_method", True)
