@@ -45,15 +45,3 @@ class SingletonTree(BaseTree):
 		if not name in self.instances:
 			self.instances[name] = creator()
 		return self.instances[name]
-
-class RandomTree(BaseTree):
-    """Returns new or cached instances based on random factor."""
-    def __init__(self, randomity=3):
-        super(RandomTree, self).__init__()
-        self.rnd = randomity
-        self.instances = {}
-
-    def get(self, creator, name):
-        if not name in self.instances or randint(0, self.rnd) == 0:
-            self.instances[name] = creator()
-        return self.instances[name]
