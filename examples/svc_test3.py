@@ -36,7 +36,7 @@ class AService(object):
 
 c = Container()
 
-c.add_service(MyVariableSvc)
-c.add_service(AService).call("some_method", param=MyVariableSvc, ham="hamdata", spam="spamdata")
+c.attempt(MyVariableSvc)
+c.attempt(AService).call("some_method", param=MyVariableSvc, ham="hamdata", spam="spamdata")
 
 print("Continer.get: %s" % c.get(AService).__class__.__name__)

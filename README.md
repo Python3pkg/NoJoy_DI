@@ -1,4 +1,4 @@
-# NoJoy-DI
+# NoJoy_DI
 
 A simple to use and feature rich Dependency Injector for python
 

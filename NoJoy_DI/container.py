@@ -49,7 +49,7 @@ class Container(object):
 		self.variables = {}
 		self.my_service_name = object_name_standard(self.__class__)
 		#print(object_name_standard(self.__class__))
-		self.set_base_tree(SingletonTree, DefaultTree, RandomTree(5))
+		self.set_base_tree(SingletonTree, DefaultTree)
 
 
 	def set_base_tree(self, *trees):
@@ -66,20 +66,25 @@ class Container(object):
 		self.my_trees = tuple(these_trees)
 		self.my_trees_cls = dict([(obj, inst) for inst, obj in enumerate(tuple(these_trees_cls))])
 
-	def set(self, name, function=None, parameters=None, shared=False):
-		svc = self.add_service(name)
-		if not shared:
-			svc.tree(DefaultTree)
+	def set(self, name):
+		svc = self.attempt(name)
 		return svc
 
 
-	def add_service(self, name):
-		s = Service(name)
-		self.services[s.name] = s
-		return s
+	def attempt(self, name,shared=False):
+		if object_name_standard(name) not in self.services:
+			s = Service(name)
+			if isinstance(shared, bool) and shared:
+				s.tree=SingletonTree
+			self.services[s.name] = s
+			return s
+		return False
 
 	def get(self, service):
 		return self._get_data(service)
+
+	def getRaw(self, service):
+		return self.services[object_name_standard(service)]
 
 
 	def add_variables(self, name, value):

@@ -35,7 +35,7 @@ except ImportError:
 
 class Service(object):
 
-	_mytree = SingletonTree
+	_mytree = DefaultTree
 	_factory = None
 
 	_classification = None
@@ -103,8 +103,8 @@ class Service(object):
 		self._classification = value
 
 	@lock_wrapper
-	def set_factory(self, service=None, function=None, clone=callable):
-		self._factory = self._lazymarker(myclone=clone, myservice=service, myfunction=function)
+	def set_factory(self, service=None, function=None, acallable=None):
+		self._factory = self._lazymarker(myclone=acallable, myservice=service, myfunction=function)
 
 	@lock_wrapper
 	def types(self, **kwargs):
@@ -112,14 +112,21 @@ class Service(object):
 
 	@lock_wrapper
 	def call(self, function, arg=False, **kwargs):
+		"""
+		Call method adds a method call with arguments on an existing Service
+		:param function:The callable funcction/method
+		:param arg: If True Argements will be detected using signature (used with set_signature) Default:False
+		:param kwargs: Arguments for function/method
+		:return:
+		"""
 		if isinstance(arg, bool):
 			self._callers.append((arg, function, self._type_maker(kwargs)))
 		else:
 			raise Exception("Undefined Argument (arg)")
 
-	@lock_wrapper
-	def call_with_signature(self, function, **kwargs):
-		self._callers.append((True, function, self._type_maker(kwargs)))
+	#@lock_wrapper
+	#def call_with_signature(self, function, **kwargs):
+	#	self._callers.append((True, function, self._type_maker(kwargs)))
 
 	@lock_wrapper
 	def set(self, **kwargs):
@@ -139,6 +146,11 @@ class Service(object):
 	def set_signature(self):
 		self._inject_signature = True
 
+	@property
+	def tree(self):
+		return self._mytree
+
 	@lock_wrapper
+	@tree.setter
 	def tree(self, tree_cls):
 		self._mytree = tree_cls
