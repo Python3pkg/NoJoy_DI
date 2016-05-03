@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.5
 # -*- coding: utf-8 -*-
 # NoJoy_DI (c) 2016 by Andre Karlsson<andre.karlsson@protractus.se>
 #
@@ -13,7 +13,7 @@
 # Timesamp: 2016-05-02 :: 14:19
 
 import unittest
-from container import Container
+from NoJoy_DI.container import Container
 
 class MyParamService(object):
     pass
@@ -28,7 +28,7 @@ class MyService(object):
 c = Container()
 
 c.add_service(MyParamService)
-c.add_variables('my-param', "value from container")
-c.add_service(MyService).types(obj__svc=MyParamService, text__param="my-param", value="defined value")
+c.add_variables('Variable_name', "variable_data")
+c.add_service(MyService).types(obj__svc=MyParamService, text__param="Variable_name", value="The DATA")
 
 c.get(MyService)

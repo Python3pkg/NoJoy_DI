@@ -21,10 +21,11 @@
 
 
 import functools
+import sys
 
-from service import Service
-from utils import *
-from trees import *
+from NoJoy_DI.service import Service
+from NoJoy_DI.utils import *
+from NoJoy_DI.trees import *
 #py3to2 hack
 try:
     from inspect import signature, Parameter
@@ -47,32 +48,34 @@ class Container(object):
 		self.services = {}
 		self.variables = {}
 		self.my_service_name = object_name_standard(self.__class__)
-		print(object_name_standard(self.__class__))
-		self.set_base_tree(SingletonTree, DefaultTree)
+		#print(object_name_standard(self.__class__))
+		self.set_base_tree(SingletonTree, DefaultTree, RandomTree(5))
 
 
 	def set_base_tree(self, *trees):
-		my_trees = []
-		my_trees_cls = []
+		these_trees = []
+		these_trees_cls = []
 
 		for tree in trees:
-			print(tree, tree)
 			if isinstance(tree, BaseTree):
-				my_trees.append(tree)
-				my_trees_cls.append(tree.__class__)
+				these_trees.append(tree)
+				these_trees_cls.append(tree.__class__)
 			else:
-				my_trees.append(tree())
-				my_trees_cls.append(tree)
-		self.my_trees = tuple(my_trees)
-		self.my_trees_cls = dict([(obj, inst) for inst, obj in enumerate(tuple(my_trees_cls))])
-		print(my_trees)
-		print(my_trees_cls)
+				these_trees.append(tree())
+				these_trees_cls.append(tree)
+		self.my_trees = tuple(these_trees)
+		self.my_trees_cls = dict([(obj, inst) for inst, obj in enumerate(tuple(these_trees_cls))])
+
+	def set(self, name, function=None, parameters=None, shared=False):
+		svc = self.add_service(name)
+		if not shared:
+			svc.tree(DefaultTree)
+		return svc
 
 
 	def add_service(self, name):
 		s = Service(name)
 		self.services[s.name] = s
-		print(self.services)
 		return s
 
 	def get(self, service):
@@ -81,7 +84,6 @@ class Container(object):
 
 	def add_variables(self, name, value):
 		self.variables[name] = value
-		print(self.variables)
 
 
 	def get_variable(self, name):
@@ -105,14 +107,13 @@ class Container(object):
 			return self
 
 		if name not in self.services:
-			print("Raise Error unknown servce")
+			print("Raise Error unknown service")
 
 		service_definition = self.services.get(name)
-
 		my_tree = service_definition._mytree
 
 		if not my_tree in self.my_trees_cls:
-			print("Raise Error unknown servce")
+			print("Raise Error unknown service")
 
 		tree_idx = self.my_trees_cls[my_tree]
 
@@ -121,12 +122,13 @@ class Container(object):
 		else:
 			req_tree = req_tokens[-1]._mytree
 			if req_tree and tree_idx > self.my_trees_cls[req_tree]:
-				print("Scope are too big")
+				print("Scope is too big")
 
 		def transformer(v):
 			if isinstance(v, LazyMarker):
-				print(v)
 				return v.transformer(lambda name: self._get_data(name, req_tokens + [service_definition]), self.get_variable)
+			else:
+				return v
 
 		def service_maker():
 			return self._make(service_definition, transformer)
@@ -145,6 +147,7 @@ class Container(object):
 			if param.annotation is signature_empty:
 				continue
 			object_name = object_name_standard(param.annotation)
+
 			if object_name in self.services:
 				types_kwargs.setdefault(name, LazyMarker(service=object_name))
 
@@ -160,25 +163,15 @@ class Container(object):
 		else:
 			cls = svc_def._get_classification()
 
-		print("Types 1: ", svc_def._types)
-
 		types_kwargs = dict(svc_def._types)
-
-		print("Types 2: ", types_kwargs)
 		self._update_types_from_signature(cls.__init__, types_kwargs)
 
 		types_kwargs = transform_types((types_kwargs))
 
-		print("Types 3: ", types_kwargs)
-
 		for config in svc_def._arguments_injectors:
 			transformer(config)(types_kwargs)
 
-		#print("Types_kwargs: ",types_kwargs )
-
 		myinstance = cls(**types_kwargs)
-
-		#print("Myinstance: ", myinstance)
 
 		for config in svc_def._injectors:
 			transformer(config)(myinstance)

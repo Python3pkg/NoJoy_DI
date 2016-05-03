@@ -19,8 +19,8 @@
 # Filename:  by: andrek
 # Timesamp: 5/1/16 :: 10:25 PM
 
-from utils import *
-from trees import *
+from NoJoy_DI.utils import *
+from NoJoy_DI.trees import *
 from functools import wraps
 from importlib import import_module
 
@@ -92,7 +92,7 @@ class Service(object):
 			if key.endswith("__svc"):
 				types[key[:-5]] = self._lazymarker(myservice=value)
 			elif key.endswith("__param"):
-				types[key[-7]] = self._lazymarker(myvariable=value)
+				types[key[:-7]] = self._lazymarker(myvariable=value)
 			else:
 				types[key] = value
 		return types
@@ -108,11 +108,13 @@ class Service(object):
 	@lock_wrapper
 	def types(self, **kwargs):
 		self._types.update(self._type_maker(kwargs))
-		print(self._types)
 
 	@lock_wrapper
-	def call(self, function, **kwargs):
-		self._callers.append((False, function, self._type_maker(kwargs)))
+	def call(self, function, arg=False, **kwargs):
+		if isinstance(arg, bool):
+			self._callers.append((arg, function, self._type_maker(kwargs)))
+		else:
+			raise Exception("Undefined Argument (arg)")
 
 	@lock_wrapper
 	def call_with_signature(self, function, **kwargs):
@@ -124,13 +126,13 @@ class Service(object):
 
 	@lock_wrapper
 	def injector(self, service=None, function=None, function_args=None,
-	             callable=None, callable_args=None):
-		if function or callable:
-			self._injectors.append(self._lazymarker(clone=callable, myservice=service, myfunction=function))
+	             acallable=None, callable_args=None):
+		if function or acallable:
+			self._injectors.append(self._lazymarker(myclone=acallable, myservice=service, myfunction=function))
 		if function_args or callable_args:
-			self._arguments_injectors.append(self._lazymarker(
-				myclone=callable, myservice=service,
-				myfunction=function_args))
+			self._arguments_injectors.append(self._lazymarker(myclone=callable_args,
+			                                                  myservice=service,
+			                                                  myfunction=function_args))
 
 	@lock_wrapper
 	def set_signature(self):
