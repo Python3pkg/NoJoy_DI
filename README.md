@@ -1,5 +1,7 @@
 # NoJoy-DI
 
-A Python Dependensy Injector to be used in the norsemultistream bot
+A simple to use and feature rich Dependency Injector for python
 
-Will hopfullt be a fully working package when done :)
+Current Status is Development/Working
+
+Simple service and parameter injections are available
