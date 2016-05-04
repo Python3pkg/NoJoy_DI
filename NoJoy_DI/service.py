@@ -20,7 +20,7 @@
 # Timesamp: 5/1/16 :: 10:25 PM
 
 from NoJoy_DI.utils import *
-from NoJoy_DI.trees import *
+from NoJoy_DI.patterns import *
 from functools import wraps
 from importlib import import_module
 
@@ -35,7 +35,7 @@ except ImportError:
 
 class Service(object):
 
-	_mytree = DefaultTree
+	_mytree = DefaultPatterns
 	_factory = None
 
 	_classification = None

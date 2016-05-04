@@ -24,7 +24,7 @@
 import unittest
 from NoJoy_DI.di import DI
 from NoJoy_DI.service import Service
-from NoJoy_DI.trees import DefaultTree, SingletonTree, BaseTree
+from NoJoy_DI.patterns import DefaultPatterns, SingletonPattern, BasePattern
 import pprint
 
 class VarClass(object):

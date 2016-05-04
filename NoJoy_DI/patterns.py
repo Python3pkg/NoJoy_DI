@@ -23,22 +23,22 @@
 
 from random import randint
 
-class BaseTree(object):
+class BasePattern(object):
 
 	def get(self, c, name):
 		raise NotImplementedError()
 
-class DefaultTree(BaseTree):
+class DefaultPatterns(BasePattern):
 
 	def get(self, c, name):
 		return c()
 
-class SingletonTree(BaseTree):
+class SingletonPattern(BasePattern):
 	"""
 	Lazy instantioation of the SInglton Pattern
 	"""
 	def __init__(self):
-		super(SingletonTree, self).__init__()
+		super(SingletonPattern, self).__init__()
 		self.instances = {}
 
 	def get(self, creator, name):
