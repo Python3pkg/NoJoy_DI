@@ -25,7 +25,7 @@ import sys
 
 from NoJoy_DI.service import Service
 from NoJoy_DI.utils import *
-from NoJoy_DI.trees import *
+from NoJoy_DI.patterns import *
 #py3to2 hack
 try:
     from inspect import signature, Parameter
@@ -40,8 +40,8 @@ class DI(object):
 	Joyiders Norse Dependency Injection Classifcation container!
 	"""
 
-	my_trees = []
-	my_trees_cls = []
+	my_patterns = []
+	my_patterns_cls = []
 
 	def __init__(self):
 		super(DI, self).__init__()
@@ -49,22 +49,22 @@ class DI(object):
 		self.variables = {}
 		self.my_service_name = object_name_standard(self.__class__)
 		#print(object_name_standard(self.__class__))
-		self.set_base_tree(SingletonTree, DefaultTree)
+		self.create_patterns(SingletonPattern, DefaultPatterns)
 
 
-	def set_base_tree(self, *trees):
-		these_trees = []
-		these_trees_cls = []
+	def create_patterns(self, *trees):
+		these_patterns = []
+		these_patterns_cls = []
 
 		for tree in trees:
-			if isinstance(tree, BaseTree):
-				these_trees.append(tree)
-				these_trees_cls.append(tree.__class__)
+			if isinstance(tree, BasePattern):
+				these_patterns.append(tree)
+				these_patterns_cls.append(tree.__class__)
 			else:
-				these_trees.append(tree())
-				these_trees_cls.append(tree)
-		self.my_trees = tuple(these_trees)
-		self.my_trees_cls = dict([(obj, inst) for inst, obj in enumerate(tuple(these_trees_cls))])
+				these_patterns.append(tree())
+				these_patterns_cls.append(tree)
+		self.my_patterns = tuple(these_patterns)
+		self.my_patterns_cls = dict([(obj, inst) for inst, obj in enumerate(tuple(these_patterns_cls))])
 
 	def set(self, name):
 		svc = Service(name)
@@ -76,7 +76,7 @@ class DI(object):
 		if object_name_standard(name) not in self.services:
 			s = Service(name)
 			if isinstance(shared, bool) and shared:
-				s.tree=SingletonTree
+				s.tree=SingletonPattern
 			self.services[s.name] = s
 			return s
 		return False
@@ -118,16 +118,16 @@ class DI(object):
 		service_definition = self.services.get(name)
 		my_tree = service_definition._mytree
 
-		if not my_tree in self.my_trees_cls:
+		if not my_tree in self.my_patterns_cls:
 			print("Raise Error unknown service")
 
-		tree_idx = self.my_trees_cls[my_tree]
+		tree_idx = self.my_patterns_cls[my_tree]
 
 		if not req_tokens:
 			req_tokens = []
 		else:
 			req_tree = req_tokens[-1]._mytree
-			if req_tree and tree_idx > self.my_trees_cls[req_tree]:
+			if req_tree and tree_idx > self.my_patterns_cls[req_tree]:
 				print("Scope is too big")
 
 		def transformer(v):
@@ -139,7 +139,7 @@ class DI(object):
 		def service_maker():
 			return self._make(service_definition, transformer)
 
-		return self.my_trees[tree_idx].get(service_maker, name)
+		return self.my_patterns[tree_idx].get(service_maker, name)
 
 	def _update_types_from_signature(self, function, types_kwargs):
 		try:
