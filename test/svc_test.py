@@ -30,6 +30,11 @@ import pprint
 class VarClass(object):
 	pass
 
+
+class MyVariableSvc(object):
+    var = "var"
+
+
 class SuperSvc(object):
 	def __init__(self, obj, text, value):
 		super(SuperSvc, self).__init__()
@@ -64,6 +69,11 @@ print("Continer.get: %s" % di.get(AService).__class__.__name__)
 id = di.get(SuperSvc)
 id2 = di.getRaw(SuperSvc)
 
+di.set(MyVariableSvc)
+myc1 = di.get(MyVariableSvc)
+myc2 = di.get(MyVariableSvc)
+myc2.var = "new_var"
+
 def test_answer():
 	"""
 	Simple test case to verify that the classes are instantiated as expected.
@@ -72,4 +82,6 @@ def test_answer():
 	assert isinstance(id2, Service)
 	assert isinstance(di.get(AService), AService)
 	assert isinstance(id, SuperSvc)
+	assert myc1 != myc2
+	assert myc2.var == myc1.var
 
