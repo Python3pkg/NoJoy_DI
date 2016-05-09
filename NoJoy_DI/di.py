@@ -49,7 +49,7 @@ class DI(object):
 		self.variables = {}
 		self.my_service_name = object_name_standard(self.__class__)
 		#print(object_name_standard(self.__class__))
-		self.create_patterns(SingletonPattern, DefaultPatterns)
+		self.create_patterns(SingletonPattern, DefaultPattern)
 
 
 	def create_patterns(self, *trees):
@@ -92,7 +92,7 @@ class DI(object):
 		self.variables[name] = value
 
 
-	def get_variable(self, name):
+	def get_variables(self, name):
 		if name in self.variables:
 			return self.variables[name]
 		else:
@@ -132,7 +132,7 @@ class DI(object):
 
 		def transformer(v):
 			if isinstance(v, LazyMarker):
-				return v.transformer(lambda name: self._get_data(name, req_tokens + [service_definition]), self.get_variable)
+				return v.transformer(lambda name: self._get_data(name, req_tokens + [service_definition]), self.get_variables)
 			else:
 				return v
 
