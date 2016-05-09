@@ -21,7 +21,7 @@
 # Filename: trees by: andrek
 # Timesamp: 2016-05-02 :: 11:47
 
-from random import randint
+from copy import copy, deepcopy
 
 class BasePattern(object):
 
@@ -47,18 +47,16 @@ class SingletonPattern(BasePattern):
 		return self.instances[name]
 
 class BorgPattern(BasePattern):
+	__instances = {}
 
 	def __init__(self):
 		super(BorgPattern, self).__init__()
-		self.instances = {}
+
 
 	def get(self, c, name):
-		c._state = {}
-		_new = c.__new__
-
-		def borgenizer(self):
-			self.__dict__ = c._state
-			_new()
-
-		c.__new__ = borgenizer
-		return c
+		if not name in self.__instances:
+			self.__instances[name] = c()
+			return  self.__instances[name]
+		theborg = c()
+		theborg.__dict__ = self.__instances[name].__dict__
+		return theborg

@@ -21,10 +21,10 @@
 # Timesamp: 5/2/16 :: 10:55 PM
 
 from NoJoy_DI.di import DI
-from NoJoy_DI.patterns import BorgPattern
+from NoJoy_DI.patterns import DefaultPattern, BorgPattern
 
 class MyVariableSvc(object):
-    pass
+    var = "var"
 
 class AService(object):
     def __init__(self, param:MyVariableSvc):
@@ -34,7 +34,7 @@ class AService(object):
     def some_method(self, param:MyVariableSvc):
         print("MyService.some_method: %s" % param.__class__.__name__)
 
-c = DI()
+di = DI()
 mydict = {'className':'SomeClass',
           'properties':[
 	          {'name':'response',
@@ -49,9 +49,20 @@ mydict = {'className':'SomeClass',
 #pp = pprint.PrettyPrinter(indent=2)
 #pp.pprint(mydict)
 
-c.set(MyVariableSvc).tree(BorgPattern)
-#c.attempt(AService).set_signature().call("some_method", True)
+di.set(MyVariableSvc)
 
+myc1 = di.get(MyVariableSvc)
+myc2 = di.get(MyVariableSvc)
+myc2.var = "new_var"
+#c.attempt(AService).set_signature().call("some_method", True)
+print(myc1)
+print(myc2)
+print(myc1.var)
+print(myc2.var)
+myc3 = di.get(MyVariableSvc)
+myc3.var = "another_var"
+print(myc3)
+print(myc1.var)
+print(myc2.var)
+print(myc3.var)
 #print("Continer.get: %s" % c.get(AService).__class__.__name__)
-print(c.get(MyVariableSvc))
-print(c.get(MyVariableSvc))

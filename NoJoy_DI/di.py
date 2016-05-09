@@ -49,7 +49,7 @@ class DI(object):
 		self.variables = {}
 		self.my_service_name = object_name_standard(self.__class__)
 		#print(object_name_standard(self.__class__))
-		self.create_patterns(SingletonPattern, DefaultPattern)
+		self.create_patterns(SingletonPattern, DefaultPattern, BorgPattern)
 
 
 	def create_patterns(self, *trees):
