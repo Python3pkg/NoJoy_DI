@@ -35,7 +35,7 @@ except ImportError:
 
 class Service(object):
 
-	_mytree = DefaultPatterns
+	_mytree = DefaultPattern
 	_factory = None
 
 	_classification = None

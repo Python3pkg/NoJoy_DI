@@ -28,7 +28,7 @@ class BasePattern(object):
 	def get(self, c, name):
 		raise NotImplementedError()
 
-class DefaultPatterns(BasePattern):
+class DefaultPattern(BasePattern):
 
 	def get(self, c, name):
 		return c()
@@ -41,7 +41,24 @@ class SingletonPattern(BasePattern):
 		super(SingletonPattern, self).__init__()
 		self.instances = {}
 
-	def get(self, creator, name):
+	def get(self, c, name):
 		if not name in self.instances:
-			self.instances[name] = creator()
+			self.instances[name] = c()
 		return self.instances[name]
+
+class BorgPattern(BasePattern):
+
+	def __init__(self):
+		super(BorgPattern, self).__init__()
+		self.instances = {}
+
+	def get(self, c, name):
+		c._state = {}
+		_new = c.__new__
+
+		def borgenizer(self):
+			self.__dict__ = c._state
+			_new()
+
+		c.__new__ = borgenizer
+		return c

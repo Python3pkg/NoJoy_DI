@@ -21,6 +21,7 @@
 # Timesamp: 5/2/16 :: 11:36 PM
 
 from NoJoy_DI.di import DI
+from NoJoy_DI.patterns import BorgPattern
 
 class MyVariableSvc(object):
     pass

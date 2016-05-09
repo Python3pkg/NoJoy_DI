@@ -21,6 +21,7 @@
 # Timesamp: 5/2/16 :: 10:55 PM
 
 from NoJoy_DI.di import DI
+from NoJoy_DI.patterns import BorgPattern
 
 class MyVariableSvc(object):
     pass
@@ -37,18 +38,20 @@ c = DI()
 mydict = {'className':'SomeClass',
           'properties':[
 	          {'name':'response',
-                         'value':
-	                         {'type':'service','name':'response'}},
-                        {'name':'someFlag',
-                         'value':
-	                         {'type':'paramter','value':True}
-                         }
-                        ]
-          }
-pp = pprint.PrettyPrinter(indent=2)
-pp.pprint(mydict)
+               'value':
+                   {'type':'service','name':'response'}
+               },
+              {'name':'someFlag',
+               'value':
+                   {'type':'paramter','value':True}
+               }
+          ]}
+#pp = pprint.PrettyPrinter(indent=2)
+#pp.pprint(mydict)
 
-c.set(MyVariableSvc)
-c.attempt(AService).set_signature().call("some_method", True)
+c.set(MyVariableSvc).tree(BorgPattern)
+#c.attempt(AService).set_signature().call("some_method", True)
 
-print("Continer.get: %s" % c.get(AService).__class__.__name__)
+#print("Continer.get: %s" % c.get(AService).__class__.__name__)
+print(c.get(MyVariableSvc))
+print(c.get(MyVariableSvc))
