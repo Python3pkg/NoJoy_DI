@@ -21,17 +21,18 @@
 # Filename: trees by: andrek
 # Timesamp: 2016-05-02 :: 11:47
 
-from copy import copy, deepcopy
 
 class BasePattern(object):
 
 	def get(self, c, name):
 		raise NotImplementedError()
 
+
 class DefaultPattern(BasePattern):
 
 	def get(self, c, name):
 		return c()
+
 
 class SingletonPattern(BasePattern):
 	"""
@@ -42,9 +43,10 @@ class SingletonPattern(BasePattern):
 		self.instances = {}
 
 	def get(self, c, name):
-		if not name in self.instances:
+		if name not in self.instances:
 			self.instances[name] = c()
 		return self.instances[name]
+
 
 class BorgPattern(BasePattern):
 	__instances = {}
@@ -52,11 +54,10 @@ class BorgPattern(BasePattern):
 	def __init__(self):
 		super(BorgPattern, self).__init__()
 
-
 	def get(self, c, name):
-		if not name in self.__instances:
+		if name not in self.__instances:
 			self.__instances[name] = c()
-			return  self.__instances[name]
+			return self.__instances[name]
 		theborg = c()
 		theborg.__dict__ = self.__instances[name].__dict__
 		return theborg
