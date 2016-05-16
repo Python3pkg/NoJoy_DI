@@ -96,10 +96,15 @@ class DI(object):
 		if name in self.variables:
 			return self.variables[name]
 		else:
-			print("Unknown variable name")
+			raise Exception("Unknown variable name")
 
 
 	def get_definition(self, myservice):
+		"""
+		Return The
+		:param myservice:
+		:return:
+		"""
 		name = object_name_standard(myservice)
 		if not name in self.services:
 			print("Raise Error unknown service")

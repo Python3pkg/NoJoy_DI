@@ -30,7 +30,7 @@ def object_name_standard(myobject):
     if isinstance(myobject, str):
         return myobject
 
-    print ("Error")
+    print("Error")
 
 
 def private(myfunc):

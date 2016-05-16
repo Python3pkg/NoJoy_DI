@@ -100,6 +100,11 @@ class Service(object):
 
 	@private
 	def set_classification(self, value):
+		"""
+		Classify the service callable
+		:param value:A callable method/function to be classified as service main callabel
+		:return:
+		"""
 		self._classification = value
 
 	@private
@@ -183,6 +188,14 @@ class Service(object):
 
 	@property
 	def pattern(self):
+		"""
+		Property for getting and setting the Design Pattern for the Service More info in Pattern
+		classes (patterns.py)
+		>>> di.set(Another_Class)
+		>>> di.set(A_Class).pattern=BorgPattern.input(var__svc=Another_Class)
+
+		:return: Pattern Class
+		"""
 		return self._mypattern
 
 	@private
