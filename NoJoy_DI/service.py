@@ -119,13 +119,21 @@ class Service(object):
 
 	@private
 	def input(self, **kwargs):
+		"""
+		Add constructor args for the service
+		>>> di.set(AFactory_Class)
+		>>> di.set(A_Class).set_factory(service=AFactory_Class, function="return_class_method").input(variable="abc")
+
+		:param kwargs: Input arguments for the Service
+		:return:
+		"""
 		self._input.update(self._input_maker(kwargs))
 
 	@private
 	def call(self, function, arg=False, **kwargs):
 		"""
 		Call method adds a method call with arguments on an existing Service
-		:param function:The callable funcction/method
+		:param function: The callable function/method
 		:param arg: If True Argements will be detected using signature (used with set_signature) Default:False
 		:param kwargs: Arguments for function/method
 		:return:
@@ -135,17 +143,33 @@ class Service(object):
 		else:
 			raise Exception("Undefined Argument (arg)")
 
-	#@private
-	#def call_with_signature(self, function, **kwargs):
-	#	self._callers.append((True, function, self._input_maker(kwargs)))
 
 	@private
 	def set(self, **kwargs):
+		"""
+		Using setattr to set the values to the instanstiated service
+		>>> di.set(A_Class).set(variable="abc")
+
+		:param kwargs: KeyWord argement for the Service
+		:return:
+		"""
 		self._sets.update(self._input_maker(kwargs))
 
 	@private
 	def injector(self, service=None, function=None, function_args=None,
 	             acallable=None, callable_args=None):
+		"""
+		Injects a Service or callable into self Service
+		>>> di.set(AnInjector_Class)
+		>>> di.set(A_Class).injector(service=AnInjector, function="a_method", function_args="a_method_with_kwargs")
+
+		:param service: Service to be injected to self
+		:param function: method to to called for injected service
+		:param function_args: method to to called WITH INPUTS for injected service
+		:param acallable: callable to to called for injected service
+		:param callable_args: callable to to called WITH INPUTS for injected service
+		:return:
+		"""
 		if function or acallable:
 			self._injectors.append(self._lazymarker(myclone=acallable, myservice=service, myfunction=function))
 		if function_args or callable_args:
