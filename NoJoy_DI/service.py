@@ -35,7 +35,7 @@ except ImportError:
 
 class Service(object):
 
-	_mytree = BorgPattern
+	_mypattern = BorgPattern
 	_factory = None
 
 	_classification = None
@@ -47,7 +47,7 @@ class Service(object):
 	def __init__(self, mycallable, classification=None):
 		super(Service, self).__init__()
 
-		self._types = {}
+		self._input = {}
 		self._sets = {}
 		self._callers = []
 		self._injectors = []
@@ -82,12 +82,12 @@ class Service(object):
 
 
 	def _lazymarker(self, myclone=None, myservice=None, myfunction=None, myvariable=None):
-		if not myclone is None:
+		if myclone is not None:
 			return myclone
 		elif myservice or myvariable:
 			return LazyMarker(service=myservice, function=myfunction, variable=myvariable)
 
-	def _type_maker(self, kwargs):
+	def _input_maker(self, kwargs):
 		types = {}
 		for key, value in kwargs.items():
 			if key.endswith("__svc"):
@@ -98,19 +98,30 @@ class Service(object):
 				types[key] = value
 		return types
 
-	@lock_wrapper
+	@private
 	def set_classification(self, value):
 		self._classification = value
 
-	@lock_wrapper
+	@private
 	def set_factory(self, service=None, function=None, acallable=None):
+		"""
+		Create a factory callable to by assigning a Factory to a Service(Class)
+		and set the private factroy accordingly
+		>>> di.set(AFactory_Class)
+		>>> di.set(A_Class).set_factory(service=AFactory_Class, function="return_class_method")
+
+		:param service: The factory Service(class) it self
+		:param function: Function/method to be called in the factory
+		:param acallable: A already created LazyMarker
+		:return:
+		"""
 		self._factory = self._lazymarker(myclone=acallable, myservice=service, myfunction=function)
 
-	@lock_wrapper
-	def types(self, **kwargs):
-		self._types.update(self._type_maker(kwargs))
+	@private
+	def input(self, **kwargs):
+		self._input.update(self._input_maker(kwargs))
 
-	@lock_wrapper
+	@private
 	def call(self, function, arg=False, **kwargs):
 		"""
 		Call method adds a method call with arguments on an existing Service
@@ -120,19 +131,19 @@ class Service(object):
 		:return:
 		"""
 		if isinstance(arg, bool):
-			self._callers.append((arg, function, self._type_maker(kwargs)))
+			self._callers.append((arg, function, self._input_maker(kwargs)))
 		else:
 			raise Exception("Undefined Argument (arg)")
 
-	#@lock_wrapper
+	#@private
 	#def call_with_signature(self, function, **kwargs):
-	#	self._callers.append((True, function, self._type_maker(kwargs)))
+	#	self._callers.append((True, function, self._input_maker(kwargs)))
 
-	@lock_wrapper
+	@private
 	def set(self, **kwargs):
-		self._sets.update(self._type_maker(kwargs))
+		self._sets.update(self._input_maker(kwargs))
 
-	@lock_wrapper
+	@private
 	def injector(self, service=None, function=None, function_args=None,
 	             acallable=None, callable_args=None):
 		if function or acallable:
@@ -142,15 +153,15 @@ class Service(object):
 			                                                  myservice=service,
 			                                                  myfunction=function_args))
 
-	@lock_wrapper
+	@private
 	def set_signature(self):
 		self._inject_signature = True
 
 	@property
-	def tree(self):
-		return self._mytree
+	def pattern(self):
+		return self._mypattern
 
-	@lock_wrapper
-	@tree.setter
-	def tree(self, tree_cls):
-		self._mytree = tree_cls
+	@private
+	@pattern.setter
+	def pattern(self, pattern_cls):
+		self._mypattern = pattern_cls

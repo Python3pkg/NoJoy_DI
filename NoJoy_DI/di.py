@@ -76,7 +76,7 @@ class DI(object):
 		if object_name_standard(name) not in self.services:
 			s = Service(name)
 			if isinstance(shared, bool) and shared:
-				s.tree=SingletonPattern
+				s.pattern=SingletonPattern
 			self.services[s.name] = s
 			return s
 		return False
@@ -116,7 +116,7 @@ class DI(object):
 			print("Raise Error unknown service")
 
 		service_definition = self.services.get(name)
-		my_tree = service_definition._mytree
+		my_tree = service_definition._mypattern
 
 		if not my_tree in self.my_patterns_cls:
 			print("Raise Error unknown service")
@@ -126,7 +126,7 @@ class DI(object):
 		if not req_tokens:
 			req_tokens = []
 		else:
-			req_tree = req_tokens[-1]._mytree
+			req_tree = req_tokens[-1]._mypattern
 			if req_tree and tree_idx > self.my_patterns_cls[req_tree]:
 				print("Scope is too big")
 
@@ -141,7 +141,7 @@ class DI(object):
 
 		return self.my_patterns[tree_idx].get(service_maker, name)
 
-	def _update_types_from_signature(self, function, types_kwargs):
+	def _update_input_from_signature(self, function, types_kwargs):
 		try:
 			sig = signature(function)
 		except ValueError:
@@ -161,7 +161,7 @@ class DI(object):
 	def _make(self, svc_def, transformer):
 		svc_def._locked = True
 
-		def transform_types(types_kwargs):
+		def transform_input(types_kwargs):
 			return dict([(key, transformer(value)) for key, value in types_kwargs.items()])
 
 		if svc_def._factory:
@@ -169,10 +169,10 @@ class DI(object):
 		else:
 			cls = svc_def._get_classification()
 
-		types_kwargs = dict(svc_def._types)
-		self._update_types_from_signature(cls.__init__, types_kwargs)
+		types_kwargs = dict(svc_def._input)
+		self._update_input_from_signature(cls.__init__, types_kwargs)
 
-		types_kwargs = transform_types((types_kwargs))
+		types_kwargs = transform_input((types_kwargs))
 
 		for config in svc_def._arguments_injectors:
 			transformer(config)(types_kwargs)
@@ -182,14 +182,14 @@ class DI(object):
 		for config in svc_def._injectors:
 			transformer(config)(myinstance)
 
-		for key, value in transform_types(svc_def._sets).items():
+		for key, value in transform_input(svc_def._sets).items():
 			setattr(myinstance, key, value)
 
-		for active_signature, caller_function, caller_types in svc_def._callers:
+		for active_signature, caller_function, caller_input in svc_def._callers:
 			callable = getattr(myinstance, caller_function)
-			types_kwargs = dict(caller_types)
+			types_kwargs = dict(caller_input)
 			if active_signature:
-				self._update_types_from_signature(callable, types_kwargs)
-			callable(**transform_types(types_kwargs))
+				self._update_input_from_signature(callable, types_kwargs)
+			callable(**transform_input(types_kwargs))
 
 		return myinstance

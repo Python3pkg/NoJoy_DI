@@ -33,7 +33,7 @@ def object_name_standard(myobject):
     print ("Error")
 
 
-def lock_wrapper(myfunc):
+def private(myfunc):
 	@wraps(myfunc)
 	def wrapper(self, *args, **kwargs):
 		if self._locked:
