@@ -73,6 +73,13 @@ class DI(object):
 
 
 	def attempt(self, name,shared=False):
+		"""
+		Add a NON existing service to the DI container
+
+		:param name: The service to be added
+		:param shared: Shared service or not Default False(DefaultPattern)
+		:return: Service if success, false if service already exists in Container
+		"""
 		if object_name_standard(name) not in self.services:
 			s = Service(name)
 			if isinstance(shared, bool) and shared:

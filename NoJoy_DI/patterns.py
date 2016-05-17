@@ -20,6 +20,9 @@
 #
 # Filename: trees by: andrek
 # Timesamp: 2016-05-02 :: 11:47
+"""Patterns for NoJoy_DI
+.. moduleauthor:: André Karlsson <andre@sess.se>
+"""
 
 
 class BasePattern(object):
@@ -36,7 +39,7 @@ class DefaultPattern(BasePattern):
 
 class SingletonPattern(BasePattern):
 	"""
-	Lazy instantioation of the SInglton Pattern
+	Lazy instantioation of the Singlton Pattern
 	"""
 	def __init__(self):
 		super(SingletonPattern, self).__init__()
@@ -49,6 +52,9 @@ class SingletonPattern(BasePattern):
 
 
 class BorgPattern(BasePattern):
+	"""
+
+	"""
 	__instances = {}
 
 	def __init__(self):

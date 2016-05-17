@@ -102,7 +102,8 @@ class Service(object):
 	def set_classification(self, value):
 		"""
 		Classify the service callable
-		:param value:A callable method/function to be classified as service main callabel
+
+		:param value:A callable method/function to be classified as service main callable
 		:return:
 		"""
 		self._classification = value
@@ -112,6 +113,7 @@ class Service(object):
 		"""
 		Create a factory callable to by assigning a Factory to a Service(Class)
 		and set the private factroy accordingly
+
 		>>> di.set(AFactory_Class)
 		>>> di.set(A_Class).set_factory(service=AFactory_Class, function="return_class_method")
 
@@ -126,6 +128,7 @@ class Service(object):
 	def input(self, **kwargs):
 		"""
 		Add constructor args for the service
+
 		>>> di.set(AFactory_Class)
 		>>> di.set(A_Class).set_factory(service=AFactory_Class, function="return_class_method").input(variable="abc")
 
@@ -138,6 +141,7 @@ class Service(object):
 	def call(self, function, arg=False, **kwargs):
 		"""
 		Call method adds a method call with arguments on an existing Service
+
 		:param function: The callable function/method
 		:param arg: If True Argements will be detected using signature (used with set_signature) Default:False
 		:param kwargs: Arguments for function/method
@@ -153,9 +157,10 @@ class Service(object):
 	def set(self, **kwargs):
 		"""
 		Using setattr to set the values to the instanstiated service
+
 		>>> di.set(A_Class).set(variable="abc")
 
-		:param kwargs: KeyWord argement for the Service
+		:param kwargs: KeyWord arguments for the Service
 		:return:
 		"""
 		self._sets.update(self._input_maker(kwargs))
@@ -165,6 +170,7 @@ class Service(object):
 	             acallable=None, callable_args=None):
 		"""
 		Injects a Service or callable into self Service
+
 		>>> di.set(AnInjector_Class)
 		>>> di.set(A_Class).injector(service=AnInjector, function="a_method", function_args="a_method_with_kwargs")
 
@@ -189,8 +195,9 @@ class Service(object):
 	@property
 	def pattern(self):
 		"""
-		Property for getting and setting the Design Pattern for the Service More info in Pattern
+		Property for getting and setting the Design Pattern for the Service. More info in Pattern
 		classes (patterns.py)
+
 		>>> di.set(Another_Class)
 		>>> di.set(A_Class).pattern=BorgPattern.input(var__svc=Another_Class)
 

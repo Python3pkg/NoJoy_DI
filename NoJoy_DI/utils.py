@@ -22,7 +22,14 @@
 
 import functools
 from inspect import isclass, isfunction, stack
-from functools import wraps
+from functools import wraps, partial, WRAPPER_ASSIGNMENTS
+
+try:
+    wraps(partial(wraps))(wraps)
+except AttributeError:
+    @wraps(wraps)
+    def wraps(obj, attr_names=WRAPPER_ASSIGNMENTS, wraps=wraps):
+        return wraps(obj, assigned=(name for name in attr_names if hasattr(obj, name)))
 
 def object_name_standard(myobject):
     if isclass(myobject) or isfunction(myobject):
