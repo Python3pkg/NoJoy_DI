@@ -4,6 +4,6 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-install pip2.7 install funcsig
+install: "pip2.7 install funcsig"
 script:
   - py.test ./test/full_python2_test.py
