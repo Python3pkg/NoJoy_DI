@@ -19,16 +19,17 @@
 # Filename:  by: andrek
 # Timesamp: 5/1/16 :: 10:25 PM
 
+import sys
 from NoJoy_DI.utils import *
 from NoJoy_DI.patterns import *
 from functools import wraps
 from importlib import import_module
 
 #py3to2 hack
-try:
+if sys.version_info >= (3,3):
 	from inspect import signature, Parameter
 	signature_empty = Parameter.empty
-except ImportError:
+else:
 	from funcsigs import signature
 	from funcsigs import _empty as signature_empty
 
