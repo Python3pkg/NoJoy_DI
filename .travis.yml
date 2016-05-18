@@ -5,5 +5,4 @@ python:
   - "3.4"
   - "3.5"
 script:
-  - py.test ./test/svc_test.py
   - py.test ./test/full_python2_test.py
