@@ -33,7 +33,8 @@ except AttributeError:
 
 def object_name_standard(myobject):
     if isclass(myobject) or isfunction(myobject):
-        return "{0}.{1}".format(myobject.__module__, myobject.__name__)
+        #return "{0}.{1}".format(myobject.__module__, myobject.__name__)
+        return "{0}".format(myobject.__name__)
     if isinstance(myobject, str):
         return myobject
 

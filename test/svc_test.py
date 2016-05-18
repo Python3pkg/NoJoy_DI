@@ -58,7 +58,7 @@ class AService(object):
 
 di = DI()
 di.attempt(VarClass)
-di.add_variables('Variable_name', "variable_data")
+di.add_variable('Variable_name', "variable_data")
 di.attempt(SuperSvc, True).input(obj__svc=VarClass, text__param="Variable_name", value="The DATA")
 
 di.set(VarClass)
@@ -67,7 +67,7 @@ di.attempt(AService).set_signature().call("some_method", True)
 print("Continer.get: %s" % di.get(AService).__class__.__name__)
 
 id = di.get(SuperSvc)
-id2 = di.getRaw(SuperSvc)
+id2 = di.get_raw(SuperSvc)
 
 di.set(MyVariableSvc)
 myc1 = di.get(MyVariableSvc)

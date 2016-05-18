@@ -30,16 +30,20 @@ class MyVariableSvc(object):
 
 
 class AClass(object):
-	pass
+	def __init__(self):
+		self.b = "as"
+
 class AnotherClass(object):
 	def __init__(self, dep):
 		super(AnotherClass, self).__init__()
 		self.dep = dep
 
 di = DI()
-di.attempt(AClass).pattern = DefaultPattern
-di.attempt(AnotherClass).input(dep__svc=AClass).pattern = SingletonPattern
+di.attempt(AClass).set_pattern(SingletonPattern)
+di.attempt(AnotherClass).input(dep__svc=AClass).set_pattern(DefaultPattern)
 
 
 print(di.get(AnotherClass).__dict__)
+
+
 

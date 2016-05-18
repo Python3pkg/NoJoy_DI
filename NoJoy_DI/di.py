@@ -26,6 +26,7 @@ import sys
 from NoJoy_DI.service import Service
 from NoJoy_DI.utils import *
 from NoJoy_DI.patterns import *
+from NoJoy_DI.exceptions import *
 #py3to2 hack
 try:
     from inspect import signature, Parameter
@@ -83,39 +84,94 @@ class DI(object):
 		if object_name_standard(name) not in self.services:
 			s = Service(name)
 			if isinstance(shared, bool) and shared:
-				s.pattern=SingletonPattern
+				s.set_pattern(SingletonPattern)
 			self.services[s.name] = s
 			return s
 		return False
 
+	def has_service(self, service):
+		"""
+		Checks whether the DI contains the Service
+
+		:param service: The service to check if exists
+		:return: True if the service exists else False
+		"""
+		if object_name_standard(service) in self.services:
+			return True
+		else:
+			return False
+
+
+	def has_variable(self, variabel):
+		"""
+		Checks whether the DI contains the variable
+
+		:param variabel: The variable to check if exists
+		:return: True if the variable exists otherwise False
+		"""
+		if object_name_standard(variabel) in self.variables:
+			return True
+		else:
+			return False
+
+
 	def get(self, service):
-		return self._get_data(service)
+		"""
+		Will instantiate and return the service as an instance
 
-	def getRaw(self, service):
-		return self.services[object_name_standard(service)]
+		>>> di.get(AClass)
+		<AClass object at 0x10d174c90>
+		>>> isinstance(di.get(AClass), AClass)
+		True
+
+		:param service: Service to instantiate
+		:return: The Instantiated class
+		"""
+		name = object_name_standard(service)
+		if self.has_service(name):
+			return self._get_data(service)
+		raise Exception("Unknown Service or Service not available: %s") % name
+
+	def get_raw(self, service):
+		"""
+		Will return the `Raw` Service of the Class
+
+		:param service: Service to get Raw data from
+		:return: Class: Service for your service
+		"""
+		name = object_name_standard(service)
+		if name not in self.services:
+			raise Exception("Raise Error unknown service: %s") % name
+		return self.services[name]
 
 
-	def add_variables(self, name, value):
+	def add_variable(self, name, value):
+		"""
+		Add a variable to the DI Container
+
+		>>>di.add_variable("A_variable", "The variable value")
+
+		:param name: Name of the Variabel
+		:param value: Value Of the Variable
+		:return: Nothing
+		"""
 		self.variables[name] = value
 
 
-	def get_variables(self, name):
+	def get_variable(self, name):
+		"""
+		Will return the variable [name] from the DI Container
+
+		>>> di.get_variable("A_variable")
+		'The variable value'
+
+		:param name: Name of the Variable
+		:return: Value of variable [name]
+		"""
 		if name in self.variables:
 			return self.variables[name]
 		else:
 			raise Exception("Unknown variable name")
-
-
-	def get_definition(self, myservice):
-		"""
-		Return The
-		:param myservice:
-		:return:
-		"""
-		name = object_name_standard(myservice)
-		if not name in self.services:
-			print("Raise Error unknown service")
-		return self.services[name]
 
 
 	def _get_data(self, myservice, req_tokens=None):
@@ -140,11 +196,11 @@ class DI(object):
 		else:
 			req_tree = req_tokens[-1]._mypattern
 			if req_tree and tree_idx > self.my_patterns_cls[req_tree]:
-				print("Scope is too big")
+				raise PatternizerException(service_definition, req_tokens)
 
 		def transformer(v):
 			if isinstance(v, LazyMarker):
-				return v.transformer(lambda name: self._get_data(name, req_tokens + [service_definition]), self.get_variables)
+				return v.transformer(lambda name: self._get_data(name, req_tokens + [service_definition]), self.get_variable)
 			else:
 				return v
 

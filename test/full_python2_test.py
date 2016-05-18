@@ -59,7 +59,7 @@ class TestPython2:
 
 		di = DI()
 
-		di.add_variables("variable", "new var value")
+		di.add_variable("variable", "new var value")
 		di.attempt(AClass).set(variable__param="variable").set(additional_variable="another value")
 		obj = di.get(AClass)
 		print(obj.additional_variable)
@@ -76,12 +76,12 @@ class TestPython2:
 				self.dep = dep
 
 		di = DI()
-		di.attempt(AClass).pattern = DefaultPattern
-		di.attempt(AnotherClass).set_pattern(SingletonPattern).input(dep__svc=AClass)
+		di.attempt(AClass).set_pattern(SingletonPattern)
+		di.attempt(AnotherClass).set_pattern(DefaultPattern).input(dep__svc=AClass)
 
 		#TODO: Check for exceptions instead of valid instance
 		assert isinstance(di.get(AnotherClass).dep, AClass)
-		assert di.get(AnotherClass) == di.get(AnotherClass)
+		assert di.get(AnotherClass) != di.get(AnotherClass)
 
 	def test_factory(self):
 		class AFactory(object):
