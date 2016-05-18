@@ -21,23 +21,25 @@
 # Timesamp: 5/2/16 :: 11:36 PM
 
 from NoJoy_DI.di import DI
-from NoJoy_DI.patterns import BorgPattern
+from NoJoy_DI.patterns import BorgPattern, SingletonPattern, DefaultPattern
+
 
 class MyVariableSvc(object):
-    pass
+	pass
 
-class AService(object):
-    def __init__(self, param:MyVariableSvc):
-        super(AService, self).__init__()
-        print("MyService.__init__: %s" % param.__class__.__name__)
 
-    def some_method(self,  param:MyVariableSvc, **kwargs):
-        print("MyService.some_method: %s" % param.__class__.__name__)
-        print("kwargs from container: ", kwargs.items())
 
-c = DI()
+class AClass(object):
+	pass
+class AnotherClass(object):
+	def __init__(self, dep):
+		super(AnotherClass, self).__init__()
+		self.dep = dep
 
-c.attempt(MyVariableSvc)
-c.attempt(AService).call("some_method", param=MyVariableSvc, ham="hamdata", spam="spamdata")
+di = DI()
+di.attempt(AClass).pattern = DefaultPattern
+di.attempt(AnotherClass).input(dep__svc=AClass).pattern = SingletonPattern
 
-print("Continer.get: %s" % c.get(AService).__class__.__name__)
+
+print(di.get(AnotherClass).__dict__)
+

@@ -35,7 +35,7 @@ except ImportError:
 
 class Service(object):
 
-	_mypattern = BorgPattern
+	_mypattern = DefaultPattern
 	_factory = None
 
 	_classification = None
@@ -192,20 +192,7 @@ class Service(object):
 	def set_signature(self):
 		self._inject_signature = True
 
-	@property
-	def pattern(self):
-		"""
-		Property for getting and setting the Design Pattern for the Service. More info in Pattern
-		classes (patterns.py)
-
-		>>> di.set(Another_Class)
-		>>> di.set(A_Class).pattern=BorgPattern.input(var__svc=Another_Class)
-
-		:return: Pattern Class
-		"""
-		return self._mypattern
-
 	@private
-	@pattern.setter
-	def pattern(self, pattern_cls):
+	def set_pattern(self, pattern_cls):
 		self._mypattern = pattern_cls
+

@@ -51,8 +51,9 @@ class SingletonPattern(BasePattern):
 		return self.instances[name]
 
 
-class BorgPattern(BasePattern):
+class BorgPattern(BasePattern): #TODO Not working with set (parameters and service)
 	"""
+	Execution of the Borg (Monostate pattern)
 
 	"""
 	__instances = {}
@@ -61,6 +62,12 @@ class BorgPattern(BasePattern):
 		super(BorgPattern, self).__init__()
 
 	def get(self, c, name):
+		"""
+		Get the instance based on the pattern to be used
+		:param c:
+		:param name:
+		:return:
+		"""
 		if name not in self.__instances:
 			self.__instances[name] = c()
 			return self.__instances[name]
