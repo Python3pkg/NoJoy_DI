@@ -96,7 +96,8 @@ class DI(object):
 		:param service: The service to check if exists
 		:return: True if the service exists else False
 		"""
-		if object_name_standard(service) in self.services:
+		name = object_name_standard(service)
+		if name in self.services or name == self.my_service_name:
 			return True
 		else:
 			return False
@@ -130,7 +131,7 @@ class DI(object):
 		name = object_name_standard(service)
 		if self.has_service(name):
 			return self._get_data(service)
-		raise Exception("Unknown Service or Service not available: %s") % name
+		raise Exception("Unknown Service or Service not available: " + name)
 
 	def get_raw(self, service):
 		"""
@@ -141,7 +142,7 @@ class DI(object):
 		"""
 		name = object_name_standard(service)
 		if name not in self.services:
-			raise Exception("Raise Error unknown service: %s") % name
+			raise Exception("Raise Error unknown service: " + name)
 		return self.services[name]
 
 
@@ -171,7 +172,7 @@ class DI(object):
 		if name in self.variables:
 			return self.variables[name]
 		else:
-			raise Exception("Unknown variable name")
+			raise Exception("Unknown variable name: " + name)
 
 
 	def _get_data(self, myservice, req_tokens=None):
@@ -180,8 +181,8 @@ class DI(object):
 		if name == self.my_service_name:
 			return self
 
-		if name not in self.services:
-			print("Raise Error unknown service")
+		if not self.has_service(myservice):
+			raise Exception("Raise Error unknown service: " + name)
 
 		service_definition = self.services.get(name)
 		my_tree = service_definition._mypattern
@@ -215,12 +216,12 @@ class DI(object):
 		except ValueError:
 			return
 
-		for name, param in tuple(sig.parameters.items()):
+		for name, parameter in tuple(sig.parameters.items()):
 			if name == "self":
 				continue
-			if param.annotation is signature_empty:
+			if parameter.annotation is signature_empty:
 				continue
-			object_name = object_name_standard(param.annotation)
+			object_name = object_name_standard(parameter.annotation)
 
 			if object_name in self.services:
 				types_kwargs.setdefault(name, LazyMarker(service=object_name))

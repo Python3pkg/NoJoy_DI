@@ -18,11 +18,11 @@ class DIException(Exception):
 
 class PatternizerException(DIException):
 
-    def __init__(self, s_def, requester_chain):
-        last_def = requester_chain[-1]
+    def __init__(self, s_def, req_tokens):
+        last_def = req_tokens[-1]
         super(PatternizerException, self).__init__(
              "Service %s[%s] is requesting %s[%s]. Chain: %s"
              % (last_def.name, last_def._mypattern.__name__, s_def.name, s_def._mypattern.__name__,
-                " => ".join([i.name for i in requester_chain])
+                " => ".join([i.name for i in req_tokens])
                 )
          )

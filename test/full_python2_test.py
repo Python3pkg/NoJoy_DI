@@ -22,7 +22,7 @@
 
 from NoJoy_DI.di import DI
 from NoJoy_DI.service import Service
-from NoJoy_DI.patterns import DefaultPattern, SingletonPattern, BasePattern
+from NoJoy_DI.patterns import DefaultPattern, SingletonPattern, BorgPattern
 
 
 class TestPython2:
@@ -113,4 +113,30 @@ class TestPython2:
 
 		assert di.get(AClass).constructor_argument == "A Constructor variable value"
 
+	def test_borgtonpattern(self):
 
+		class AClass(object):
+			var = "var"
+
+		di = DI()
+		di.attempt(AClass).set_pattern(BorgPattern)
+		obj1 = di.get(AClass)
+		obj2 = di.get(AClass)
+		obj1.var = "new var"
+
+		assert obj1 != obj2
+		assert obj1.var == obj2.var
+
+	def test_shared(self):
+		class AClass(object):
+			pass
+
+		di = DI()
+		di.attempt(AClass, shared=True)
+
+		assert di.get(AClass) == di.get(AClass)
+
+	def test_dummy(self):
+		di = DI()
+
+		assert di.get(DI) == di
