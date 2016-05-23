@@ -54,6 +54,12 @@ class DI(object):
 
 
 	def create_patterns(self, *trees):
+		"""
+		Load the design patterns from patterns.py
+
+		:param trees: Args of patterns to load
+		:return: Nothing
+		"""
 		these_patterns = []
 		these_patterns_cls = []
 
@@ -188,7 +194,7 @@ class DI(object):
 		my_tree = service_definition._mypattern
 
 		if not my_tree in self.my_patterns_cls:
-			print("Raise Error unknown service")
+			raise Exception("Unknown pattern state")
 
 		tree_idx = self.my_patterns_cls[my_tree]
 
