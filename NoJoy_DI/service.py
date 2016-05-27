@@ -25,7 +25,7 @@ from NoJoy_DI.patterns import *
 from functools import wraps
 from importlib import import_module
 
-#py3to2 hack
+#version hack
 if sys.version_info >= (3,3):
 	from inspect import signature, Parameter
 	signature_empty = Parameter.empty

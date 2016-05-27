@@ -27,13 +27,13 @@ from NoJoy_DI.service import Service
 from NoJoy_DI.utils import *
 from NoJoy_DI.patterns import *
 from NoJoy_DI.exceptions import *
-#py3to2 hack
-try:
-    from inspect import signature, Parameter
-    signature_empty = Parameter.empty
-except ImportError:
-    from funcsigs import signature
-    from funcsigs import _empty as signature_empty
+#version hack
+if sys.version_info >= (3,3):
+	from inspect import signature, Parameter
+	signature_empty = Parameter.empty
+else:
+	from funcsigs import signature
+	from funcsigs import _empty as signature_empty
 
 
 class DI(object):
