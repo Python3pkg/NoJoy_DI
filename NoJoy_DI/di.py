@@ -237,7 +237,7 @@ class DI(object):
 		svc_def._locked = True
 
 		def transform_input(types_kwargs):
-			return dict([(key, transformer(value)) for key, value in types_kwargs.items()])
+			return dict([(key, transformer(value)) for key, value in list(types_kwargs.items())])
 
 		if svc_def._factory:
 			cls = transformer(svc_def._factory)
@@ -257,7 +257,7 @@ class DI(object):
 		for config in svc_def._injectors:
 			transformer(config)(myinstance)
 
-		for key, value in transform_input(svc_def._sets).items():
+		for key, value in list(transform_input(svc_def._sets).items()):
 			setattr(myinstance, key, value)
 
 		for active_signature, caller_function, caller_input in svc_def._callers:

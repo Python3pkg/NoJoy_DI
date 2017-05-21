@@ -62,7 +62,7 @@ class TestPython2:
 		di.add_variable("variable", "new var value")
 		di.attempt(AClass).set(variable__param="variable").set(additional_variable="another value")
 		obj = di.get(AClass)
-		print(obj.additional_variable)
+		print((obj.additional_variable))
 
 		assert obj.variable == "new var value"
 		assert obj.additional_variable == "another value"

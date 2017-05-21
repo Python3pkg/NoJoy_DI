@@ -24,6 +24,7 @@ from NoJoy_DI.utils import *
 from NoJoy_DI.patterns import *
 from functools import wraps
 from importlib import import_module
+import collections
 
 #version hack
 if sys.version_info >= (3,3):
@@ -59,7 +60,7 @@ class Service(object):
 		if classification:
 			self._classification = classification
 		else:
-			if callable(mycallable):
+			if isinstance(mycallable, collections.Callable):
 				self._classification = mycallable
 			else:
 				self._classification_getter = self._lazy_loader(mycallable)
@@ -90,7 +91,7 @@ class Service(object):
 
 	def _input_maker(self, kwargs):
 		types = {}
-		for key, value in kwargs.items():
+		for key, value in list(kwargs.items()):
 			if key.endswith("__svc"):
 				types[key[:-5]] = self._lazymarker(myservice=value)
 			elif key.endswith("__param"):

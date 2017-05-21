@@ -43,7 +43,7 @@ di.attempt(AClass).set_pattern(SingletonPattern)
 di.attempt(AnotherClass).input(dep__svc=AClass).set_pattern(DefaultPattern)
 
 
-print(di.get(AnotherClass).__dict__)
+print((di.get(AnotherClass).__dict__))
 
 
 

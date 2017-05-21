@@ -38,10 +38,10 @@ class MyVariableSvc(object):
 class SuperSvc(object):
 	def __init__(self, obj, text, value):
 		super(SuperSvc, self).__init__()
-		print("service instance: %s" % obj)
-		print("container parameter: %s" % text)
-		print("provided value: %s" % value)
-		print("I am: ", self.__class__)
+		print(("service instance: %s" % obj))
+		print(("container parameter: %s" % text))
+		print(("provided value: %s" % value))
+		print(("I am: ", self.__class__))
 
 
 class AService(object):
@@ -50,11 +50,11 @@ class AService(object):
 	def __init__(self, param:VarClass):
 		super(AService, self).__init__()
 		self.a = param
-		print("AService.__init__: %s" % param.__class__.__name__)
+		print(("AService.__init__: %s" % param.__class__.__name__))
 
 	def some_method(self, param:VarClass):
 		self.b = param
-		print("AService.some_method: %s" % param.__class__.__name__)
+		print(("AService.some_method: %s" % param.__class__.__name__))
 
 di = DI()
 di.attempt(VarClass)
@@ -64,7 +64,7 @@ di.attempt(SuperSvc, True).input(obj__svc=VarClass, text__param="Variable_name",
 di.set(VarClass)
 di.attempt(AService).set_signature().call("some_method", True)
 
-print("Continer.get: %s" % di.get(AService).__class__.__name__)
+print(("Continer.get: %s" % di.get(AService).__class__.__name__))
 
 id = di.get(SuperSvc)
 id2 = di.get_raw(SuperSvc)

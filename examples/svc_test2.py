@@ -29,10 +29,10 @@ class MyVariableSvc(object):
 class AService(object):
     def __init__(self, param:MyVariableSvc):
         super(AService, self).__init__()
-        print("MyService.__init__: %s" % param.__class__.__name__)
+        print(("MyService.__init__: %s" % param.__class__.__name__))
 
     def some_method(self, param:MyVariableSvc):
-        print("MyService.some_method: %s" % param.__class__.__name__)
+        print(("MyService.some_method: %s" % param.__class__.__name__))
 
 di = DI()
 mydict = {'className':'SomeClass',
@@ -57,12 +57,12 @@ myc2.var = "new_var"
 #c.attempt(AService).set_signature().call("some_method", True)
 print(myc1)
 print(myc2)
-print(myc1.var)
-print(myc2.var)
+print((myc1.var))
+print((myc2.var))
 myc3 = di.get(MyVariableSvc)
 myc3.var = "another_var"
 print(myc3)
-print(myc1.var)
-print(myc2.var)
-print(myc3.var)
+print((myc1.var))
+print((myc2.var))
+print((myc3.var))
 #print("Continer.get: %s" % c.get(AService).__class__.__name__)
